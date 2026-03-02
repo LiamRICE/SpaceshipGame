@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://8u01gr4wqwk"]
+
+[ext_resource type="Script" uid="uid://dpvo7wyt2rfgc" path="res://ui/ui_player_representation.gd" id="1_tyjkp"]
+
+[node name="UIPlayerRepresentation" type="HBoxContainer" unique_id=77683693]
+offset_right = 6.0
+script = ExtResource("1_tyjkp")
+
+[node name="PlayerNameLabel" type="RichTextLabel" parent="." unique_id=652786879]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "Player Name"
+fit_content = true
+
+[node name="PlayerIDLabel" type="RichTextLabel" parent="." unique_id=746453520]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(50, 0)
+layout_mode = 2
+text = "-1"
+fit_content = true

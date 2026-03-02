@@ -1,0 +1,25 @@
+[gd_scene format=3 uid="uid://0j2wfl2u10xh"]
+
+[ext_resource type="Script" uid="uid://bfyvrm5gas74u" path="res://ui/ui_host_game.gd" id="1_k6k7w"]
+
+[node name="UIHostGame" type="CanvasLayer" unique_id=368437000]
+script = ExtResource("1_k6k7w")
+
+[node name="PlayerListVBoxContainer" type="VBoxContainer" parent="." unique_id=113858108]
+unique_name_in_owner = true
+anchors_preset = 13
+anchor_left = 0.5
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -48.0
+offset_right = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 4
+alignment = 1
+
+[node name="StartGame" type="Button" parent="PlayerListVBoxContainer" unique_id=1938764896]
+layout_mode = 2
+text = "Start Game"
+
+[connection signal="pressed" from="PlayerListVBoxContainer/StartGame" to="." method="_on_start_game_pressed"]

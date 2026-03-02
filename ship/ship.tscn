@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://dqv67538fj3jn"]
+
+[ext_resource type="Script" uid="uid://b5we7nsn778rj" path="res://ship/ship.gd" id="1_2jgil"]
+[ext_resource type="Texture2D" uid="uid://eufbsic8y7ja" path="res://ship/placeholder_ship.jpg" id="1_jgjpc"]
+
+[node name="Ship" type="Node2D" unique_id=874566300]
+script = ExtResource("1_2jgil")
+
+[node name="PlaceholderShip" type="Sprite2D" parent="." unique_id=2131616032]
+texture = ExtResource("1_jgjpc")

@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://cef27of5xjuj8"]
+
+[ext_resource type="Script" uid="uid://dlp8i2atgf21b" path="res://game/game_scene.gd" id="1_2rju1"]
+[ext_resource type="PackedScene" uid="uid://dqv67538fj3jn" path="res://ship/ship.tscn" id="1_38oxi"]
+[ext_resource type="PackedScene" uid="uid://c7ynmikx0vkj3" path="res://player/player_camera.tscn" id="3_2rju1"]
+[ext_resource type="Script" uid="uid://bkjkfiibgb5vq" path="res://multiplayer/multiplayer_player_spawner.gd" id="4_aa1sf"]
+[ext_resource type="PackedScene" uid="uid://pnuyc7yhofwn" path="res://player/player.tscn" id="5_svcr2"]
+
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_38oxi"]
+properties/0/path = NodePath("Ship:position")
+properties/0/spawn = true
+properties/0/replication_mode = 1
+
+[node name="GameScene" type="Node2D" unique_id=984106138]
+script = ExtResource("1_2rju1")
+
+[node name="Ship" parent="." unique_id=874566300 instance=ExtResource("1_38oxi")]
+unique_name_in_owner = true
+
+[node name="Players" type="Node2D" parent="." unique_id=1961608921]
+unique_name_in_owner = true
+
+[node name="Effects" type="Node2D" parent="." unique_id=131973469]
+
+[node name="PlayerCamera" parent="." unique_id=228939153 instance=ExtResource("3_2rju1")]
+unique_name_in_owner = true
+
+[node name="MultiplayerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=1219660030]
+unique_name_in_owner = true
+replication_config = SubResource("SceneReplicationConfig_38oxi")
+
+[node name="MultiplayerPlayerSpawner" type="MultiplayerSpawner" parent="." unique_id=1782363378]
+unique_name_in_owner = true
+_spawnable_scenes = PackedStringArray("uid://pnuyc7yhofwn")
+spawn_path = NodePath("../Players")
+spawn_limit = 16
+script = ExtResource("4_aa1sf")
+network_player = ExtResource("5_svcr2")
+
+[node name="MultiplayerEffectSpawner" type="MultiplayerSpawner" parent="." unique_id=1781436769]
+unique_name_in_owner = true
+spawn_path = NodePath("../Effects")

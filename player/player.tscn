@@ -1,10 +1,33 @@
 [gd_scene format=3 uid="uid://pnuyc7yhofwn"]
 
+[ext_resource type="Script" uid="uid://q7bjecm54jrf" path="res://player/player.gd" id="1_oul6g"]
+[ext_resource type="Texture2D" uid="uid://cinn1ttiv3xix" path="res://player/placeholder_player.png" id="2_rkbax"]
+
 [sub_resource type="CircleShape2D" id="CircleShape2D_kqu6x"]
 
-[node name="Player" type="RigidBody2D" unique_id=809562151]
+[sub_resource type="SceneReplicationConfig" id="SceneReplicationConfig_rkbax"]
+properties/0/path = NodePath(".:player")
+properties/0/spawn = true
+properties/0/replication_mode = 2
+properties/1/path = NodePath(".:position")
+properties/1/spawn = true
+properties/1/replication_mode = 1
+properties/2/path = NodePath(".:rotation")
+properties/2/spawn = true
+properties/2/replication_mode = 1
+
+[node name="Player" type="CharacterBody2D" unique_id=257481496]
+script = ExtResource("1_oul6g")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=447705894]
 shape = SubResource("CircleShape2D_kqu6x")
 
-[node name="PlayerSprite" type="Sprite2D" parent="." unique_id=468080645]
+[node name="PlaceholderPlayer" type="Sprite2D" parent="." unique_id=1713986396]
+position = Vector2(1.9999999, -4.9999995)
+rotation = -1.5707964
+scale = Vector2(0.1, 0.1)
+texture = ExtResource("2_rkbax")
+
+[node name="ServerSynchronizer" type="MultiplayerSynchronizer" parent="." unique_id=933265680]
+unique_name_in_owner = true
+replication_config = SubResource("SceneReplicationConfig_rkbax")

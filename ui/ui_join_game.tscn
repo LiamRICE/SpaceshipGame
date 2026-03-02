@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://dxoobnjav8cdp"]
+
+[ext_resource type="Script" uid="uid://dudyvxllt0x0j" path="res://ui/ui_join_game.gd" id="1_hv033"]
+
+[node name="UIJoinGame" type="CanvasLayer" unique_id=883608324]
+script = ExtResource("1_hv033")
+
+[node name="VBoxContainer" type="HBoxContainer" parent="." unique_id=572202155]
+anchors_preset = 14
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_bottom = 43.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_vertical = 4
+alignment = 1
+
+[node name="IPTextEdit" type="TextEdit" parent="VBoxContainer" unique_id=1722241144]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
+layout_mode = 2
+text = "127.0.0.1"
+
+[node name="JoinButton" type="Button" parent="VBoxContainer" unique_id=567448853]
+layout_mode = 2
+text = "Join"
+
+[connection signal="pressed" from="VBoxContainer/JoinButton" to="." method="_on_join_button_pressed"]
