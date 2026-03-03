@@ -1,13 +1,13 @@
 extends Node
 
-# Autoload named Lobby
+# Autoload named NetworkHandler
 
-# These signals can be connected to by a UI lobby scene or the game scene.
+# Signals
 signal player_connected(peer_id, player_info)
 signal player_disconnected(peer_id)
 signal server_disconnected
-signal player_loaded_scene(peer_id)
 
+# Constants
 const PORT = 4433
 const DEFAULT_SERVER_IP = "127.0.0.1" # IPv4 localhost
 const MAX_CONNECTIONS = 16
@@ -20,8 +20,9 @@ var players = {}
 # before the connection is made. It will be passed to every other peer.
 # For example, the value of "name" can be set to something the player
 # entered in a UI scene.
-var player_info = {"name": "Name"}
+var player_info = {"name": "Player"}
 
+# Checks all the players have loaded a scene
 var players_loaded = 0
 
 
@@ -31,22 +32,6 @@ func _ready():
 	multiplayer.connected_to_server.connect(_on_connected_ok)
 	multiplayer.connection_failed.connect(_on_connected_fail)
 	multiplayer.server_disconnected.connect(_on_server_disconnected)
-	player_connected.connect(print_player_connected)
-
-
-func print_player_connected():
-	print("Player Connected!")
-
-func join_game(address = ""):
-	print("Connecting to server ", address)
-	if address.is_empty():
-		print("Connection failed.")
-		address = DEFAULT_SERVER_IP
-	var peer = ENetMultiplayerPeer.new()
-	var error = peer.create_client(address, PORT)
-	if error:
-		return error
-	multiplayer.multiplayer_peer = peer
 
 
 func create_game():
@@ -55,20 +40,30 @@ func create_game():
 	if error:
 		return error
 	multiplayer.multiplayer_peer = peer
-
+	
 	players[1] = player_info
 	player_connected.emit(1, player_info)
+	print("Server hosted on ", DEFAULT_SERVER_IP, " : ", PORT)
 	
 	UiManager._debug_set_game_ui_statistics(1, "Server")
 
 
-func remove_multiplayer_peer():
-	multiplayer.multiplayer_peer = OfflineMultiplayerPeer.new()
-	players.clear()
+func join_game(address = ""):
+	print("Connecting to server ", address)
+	if address.is_empty():
+		print("Address is empty: connecting to Localhost")
+		address = DEFAULT_SERVER_IP
+	var peer = ENetMultiplayerPeer.new()
+	var error = peer.create_client(address, PORT)
+	if error:
+		print("Connection Failed for peer ", peer.get_unique_id())
+		return error
+	multiplayer.multiplayer_peer = peer
+	print("Peer ", peer.get_unique_id(), " connected successfully!")
 
 
 # When the server decides to start the game from a UI scene,
-# do Lobby.load_game.rpc(filepath)
+# do NetworkHandler.load_game.rpc(filepath)
 @rpc("call_local", "reliable")
 func load_game(scene_name:String):
 	var game_scene = UiManager.get_packed_scene(scene_name)
@@ -76,15 +71,19 @@ func load_game(scene_name:String):
 		print("loading game")
 		get_tree().change_scene_to_packed(game_scene)
 		UiManager.navigate_to("ui_game")
-		player_loaded.rpc_id(1, multiplayer.get_unique_id())
 
 
 # Every peer will call this when they have loaded the game scene.
 @rpc("any_peer", "call_local", "reliable")
-func player_loaded(player_id):
+func player_loaded():
 	if multiplayer.is_server():
-		print("Player ", str(player_id), " loaded on Server")
-		player_loaded_scene.emit(multiplayer.get_unique_id())
+		players_loaded += 1
+		if players_loaded == players.size():
+			var player_list: Array[int] = []
+			for key in players.keys():
+				player_list.append(int(key))
+			$/root/GameScene.start_game(player_list)
+			players_loaded = 0
 
 
 # When a peer connects, send them my player info.
@@ -98,6 +97,11 @@ func _register_player(new_player_info):
 	var new_player_id = multiplayer.get_remote_sender_id()
 	players[new_player_id] = new_player_info
 	player_connected.emit(new_player_id, new_player_info)
+
+
+func remove_multiplayer_peer():
+	multiplayer.multiplayer_peer = OfflineMultiplayerPeer.new()
+	players.clear()
 
 
 func _on_player_disconnected(id):
