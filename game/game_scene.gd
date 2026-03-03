@@ -14,4 +14,5 @@ func _ready() -> void:
 
 func start_game(ids:Array[int]):
 	print("Game Starting...")
-	%MultiplayerPlayerSpawner.spawn_players(ids)
+	for id in ids:
+		%MultiplayerPlayerSpawner.spawn_player(id)
